@@ -1,0 +1,156 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "Đắc Nhân Tâm",
+      "author": "Dale Carnegie",
+      "price": 129000,
+      "originalPrice": 159000,
+      "category": "Tâm lý - Kỹ năng sống",
+      "categoryId": 1,
+      "cover": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.8,
+      "reviewCount": 1250,
+      "stock": 24,
+      "featured": true,
+      "description": "Cuốn sách giúp bạn hiểu cách giao tiếp hiệu quả và xây dựng mối quan hệ tốt đẹp."
+    },
+    {
+      "id": 2,
+      "title": "Nhà Giả Kim",
+      "author": "Paulo Coelho",
+      "price": 99000,
+      "originalPrice": 129000,
+      "category": "Văn học",
+      "categoryId": 2,
+      "cover": "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.7,
+      "reviewCount": 980,
+      "stock": 18,
+      "featured": true,
+      "description": "Câu chuyện về hành trình tìm kiếm ước mơ và ý nghĩa cuộc sống."
+    },
+    {
+      "id": 3,
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "price": 189000,
+      "originalPrice": 229000,
+      "category": "Lịch sử",
+      "categoryId": 3,
+      "cover": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.9,
+      "reviewCount": 1520,
+      "stock": 12,
+      "featured": true,
+      "description": "Tổng quan về lịch sử loài người từ thời nguyên thủy đến hiện đại."
+    },
+    {
+      "id": 4,
+      "title": "Think and Grow Rich",
+      "author": "Napoleon Hill",
+      "price": 109000,
+      "originalPrice": 139000,
+      "category": "Kinh doanh",
+      "categoryId": 4,
+      "cover": "https://images.unsplash.com/photo-1516245834210-c4c142787335?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.6,
+      "reviewCount": 740,
+      "stock": 20,
+      "featured": false,
+      "description": "Một cuốn sách kinh điển về tư duy thành công và phát triển bản thân."
+    },
+    {
+      "id": 5,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "price": 149000,
+      "originalPrice": 179000,
+      "category": "Tâm lý - Kỹ năng sống",
+      "categoryId": 1,
+      "cover": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.8,
+      "reviewCount": 2100,
+      "stock": 30,
+      "featured": true,
+      "description": "Hướng dẫn xây dựng thói quen tốt và bỏ những thói quen xấu."
+    },
+    {
+      "id": 6,
+      "title": "Bí Mật Của May Mắn",
+      "author": "Rhonda Byrne",
+      "price": 89000,
+      "originalPrice": 119000,
+      "category": "Phát triển bản thân",
+      "categoryId": 5,
+      "cover": "https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.5,
+      "reviewCount": 610,
+      "stock": 15,
+      "featured": false,
+      "description": "Khám phá sức mạnh của suy nghĩ tích cực và cách tạo ra may mắn."
+    },
+    {
+      "id": 7,
+      "title": "Dune",
+      "author": "Frank Herbert",
+      "price": 169000,
+      "originalPrice": 199000,
+      "category": "Văn học",
+      "categoryId": 2,
+      "cover": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.7,
+      "reviewCount": 830,
+      "stock": 10,
+      "featured": false,
+      "description": "Một tiểu thuyết khoa học viễn tưởng mang tính biểu tượng về quyền lực và môi trường."
+    },
+    {
+      "id": 8,
+      "title": "The Psychology of Money",
+      "author": "Morgan Housel",
+      "price": 139000,
+      "originalPrice": 169000,
+      "category": "Kinh doanh",
+      "categoryId": 4,
+      "cover": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=600&q=80",
+      "rating": 4.8,
+      "reviewCount": 1120,
+      "stock": 22,
+      "featured": true,
+      "description": "Hiểu rõ cách tư duy về tiền bạc và quyết định tài chính cá nhân."
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Tâm lý - Kỹ năng sống",
+      "icon": "🧠",
+      "bookCount": 2
+    },
+    {
+      "id": 2,
+      "name": "Văn học",
+      "icon": "📚",
+      "bookCount": 2
+    },
+    {
+      "id": 3,
+      "name": "Lịch sử",
+      "icon": "🏛️",
+      "bookCount": 1
+    },
+    {
+      "id": 4,
+      "name": "Kinh doanh",
+      "icon": "💼",
+      "bookCount": 2
+    },
+    {
+      "id": 5,
+      "name": "Phát triển bản thân",
+      "icon": "🌱",
+      "bookCount": 1
+    }
+  ]
+}
