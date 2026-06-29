@@ -1,22 +1,58 @@
+// SectionWrapper.jsx - Tuần 3
+// Người làm: A
+// Reusable wrapper component
+
 function SectionWrapper({
   title,
- subtitle,
-  backgroundColor,
+  subtitle,
+  backgroundColor = "#f9fafb",
   children,
 }) {
-  return (
-    <section
-      style={{
-        backgroundColor,
-        padding: "40px 24px",
-      }}
-    >
-      <h2>{title}</h2>
-      <p>{subtitle}</p>
+  const styles = {
+    section: {
+      padding: "48px 24px",
+      backgroundColor,
+    },
 
-      {children}
+    container: {
+      maxWidth: "1100px",
+      margin: "0 auto",
+    },
+
+    header: {
+      marginBottom: subtitle ? "8px" : "32px",
+    },
+
+    title: {
+      fontSize: "28px",
+      fontWeight: "700",
+      color: "#111827",
+      margin: 0,
+    },
+
+    subtitle: {
+      fontSize: "15px",
+      color: "#6b7280",
+      marginTop: "6px",
+      marginBottom: "28px",
+    },
+  };
+
+  return (
+    <section style={styles.section}>
+      <div style={styles.container}>
+        {title && (
+          <div style={styles.header}>
+            <h2 style={styles.title}>{title}</h2>
+            {subtitle && <p style={styles.subtitle}>{subtitle}</p>}
+          </div>
+        )}
+
+        {children}
+      </div>
     </section>
   );
 }
+
 
 export default SectionWrapper;
