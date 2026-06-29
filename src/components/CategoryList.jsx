@@ -5,11 +5,7 @@
 function CategoryList({ categories }) {
   const styles = {
     container: {
-      margin: "24px",
-    },
-
-    title: {
-      marginBottom: "20px",
+      margin: "24px 0",
     },
 
     list: {
@@ -34,17 +30,14 @@ function CategoryList({ categories }) {
   };
 
   return (
-    <section style={styles.container}>
-      <h2 style={styles.title}>Danh mục sách</h2>
-
+    <div style={styles.container}>
       {categories.length > 0 ? (
         <div style={styles.list}>
           {categories.map((category) => (
             <div key={category.id} style={styles.item}>
               {category.icon} {category.name}
-
               {category.name === "Kinh doanh" && (
-                <span style={styles.hot}>HOT</span>
+                <span style={styles.hot}> HOT</span>
               )}
             </div>
           ))}
@@ -52,9 +45,8 @@ function CategoryList({ categories }) {
       ) : (
         <p>Không có danh mục.</p>
       )}
-    </section>
+    </div>
   );
 }
-
 
 export default CategoryList;

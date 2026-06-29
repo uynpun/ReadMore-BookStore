@@ -1,6 +1,6 @@
 function SectionWrapper({
   title,
-  subtitle,
+ subtitle,
   backgroundColor,
   children,
 }) {
@@ -18,6 +18,5 @@ function SectionWrapper({
     </section>
   );
 }
-
 
 export default SectionWrapper;

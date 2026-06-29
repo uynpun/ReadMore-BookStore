@@ -1,6 +1,7 @@
 // App.jsx - Tuần 3
-// Người B: Refactor App.jsx
-// Truyền Props cho CategoryList và BookGrid
+// Refactor App.jsx
+// Truyền props cho CategoryList và BookGrid
+// Cung cấp BOOKS_DATA và handleAddToCart xuống BookGrid
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -11,8 +12,63 @@ import BookGrid from "./components/BookGrid";
 import Footer from "./components/Footer";
 import SectionWrapper from "./components/SectionWrapper";
 
-function App() {
+// Dữ liệu sách đặt ở App — "single source of truth"
+const BOOKS_DATA = [
+  {
+    id: 1,
+    title: "Đắc Nhân Tâm",
+    author: "Dale Carnegie",
+    price: 129000,
+    originalPrice: 159000,
+    cover:
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+    rating: 4.8,
+    reviewCount: 1250,
+    stock: 24,
+    featured: true,
+  },
+  {
+    id: 2,
+    title: "Nhà Giả Kim",
+    author: "Paulo Coelho",
+    price: 99000,
+    originalPrice: 129000,
+    cover:
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=600&q=80",
+    rating: 4.7,
+    reviewCount: 980,
+    stock: 18,
+    featured: true,
+  },
+  {
+    id: 3,
+    title: "Sapiens",
+    author: "Yuval Noah Harari",
+    price: 189000,
+    originalPrice: 229000,
+    cover:
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=600&q=80",
+    rating: 4.9,
+    reviewCount: 1520,
+    stock: 0,
+    featured: true,
+  },
+  {
+    id: 4,
+    title: "The Psychology of Money",
+    author: "Morgan Housel",
+    price: 139000,
+    originalPrice: 169000,
+    cover:
+      "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=600&q=80",
+    rating: 4.8,
+    reviewCount: 1120,
+    stock: 22,
+    featured: true,
+  },
+];
 
+function App() {
   const CATEGORIES = [
     {
       id: 1,
@@ -41,40 +97,9 @@ function App() {
     },
   ];
 
-  const BOOKS = [
-    {
-      id: 1,
-      title: "Đắc Nhân Tâm",
-      author: "Dale Carnegie",
-      price: "120.000đ",
-      image: "https://picsum.photos/200/300?1",
-      stock: 10,
-    },
-    {
-      id: 2,
-      title: "Atomic Habits",
-      author: "James Clear",
-      price: "180.000đ",
-      image: "https://picsum.photos/200/300?2",
-      stock: 8,
-    },
-    {
-      id: 3,
-      title: "Clean Code",
-      author: "Robert C. Martin",
-      price: "250.000đ",
-      image: "https://picsum.photos/200/300?3",
-      stock: 0,
-    },
-    {
-      id: 4,
-      title: "Nhà Giả Kim",
-      author: "Paulo Coelho",
-      price: "150.000đ",
-      image: "https://picsum.photos/200/300?4",
-      stock: 12,
-    },
-  ];
+  function handleAddToCart(book) {
+    alert(`✅ Đã thêm "${book.title}" vào giỏ hàng!`);
+  }
 
   return (
     <>
@@ -95,13 +120,15 @@ function App() {
         subtitle="Những cuốn sách được yêu thích"
         backgroundColor="#f8f9fa"
       >
-        <BookGrid books={BOOKS} />
+        <BookGrid
+          books={BOOKS_DATA}
+          onAddToCart={handleAddToCart}
+        />
       </SectionWrapper>
 
       <Footer />
     </>
   );
 }
-
 
 export default App;
