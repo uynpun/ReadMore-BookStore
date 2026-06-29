@@ -1,16 +1,8 @@
-// CategoryList.jsx - Tuần 2
-// Người làm: B
-// Dùng map(), && và toán tử ba ngôi
+// CategoryList.jsx - Tuần 3
+// Người làm: B (Võ Trần Phương Uyên)
+// Refactor sử dụng Props
 
-function CategoryList() {
-  const categories = [
-    "🧠 Tâm lý - Kỹ năng sống",
-    "📚 Văn học",
-    "🏛️ Lịch sử",
-    "💼 Kinh doanh",
-    "🌱 Phát triển bản thân",
-  ];
-
+function CategoryList({ categories }) {
   const styles = {
     container: {
       margin: "24px",
@@ -48,13 +40,11 @@ function CategoryList() {
       {categories.length > 0 ? (
         <div style={styles.list}>
           {categories.map((category) => (
-            <div key={category} style={styles.item}>
-              {category}
+            <div key={category.id} style={styles.item}>
+              {category.icon} {category.name}
 
-              {category.includes("Kinh doanh") && (
-                <span style={styles.hot}>
-                  HOT
-                </span>
+              {category.name === "Kinh doanh" && (
+                <span style={styles.hot}>HOT</span>
               )}
             </div>
           ))}
@@ -65,6 +55,5 @@ function CategoryList() {
     </section>
   );
 }
-
 
 export default CategoryList;
