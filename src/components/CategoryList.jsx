@@ -56,4 +56,5 @@ function CategoryList({ categories }) {
   );
 }
 
+
 export default CategoryList;
