@@ -3,6 +3,7 @@
 // ✅ handleAddToCart: immutable update, KHÔNG dùng cart.push()
 // ✅ Truyền cartCount xuống Header (lifting state up)
 // ✅ Tích hợp SearchBar (controlled component)
+// ✅ Người B: Filter Category + Derived State
 
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,6 +22,7 @@ const BOOKS_DATA = [
     id: 1,
     title: "Đắc Nhân Tâm",
     author: "Dale Carnegie",
+    category: "Tâm lý - Kỹ năng sống",
     price: 129000,
     originalPrice: 159000,
     cover:
@@ -34,6 +36,7 @@ const BOOKS_DATA = [
     id: 2,
     title: "Nhà Giả Kim",
     author: "Paulo Coelho",
+    category: "Văn học",
     price: 99000,
     originalPrice: 129000,
     cover:
@@ -47,6 +50,7 @@ const BOOKS_DATA = [
     id: 3,
     title: "Sapiens",
     author: "Yuval Noah Harari",
+    category: "Lịch sử",
     price: 189000,
     originalPrice: 229000,
     cover:
@@ -60,6 +64,7 @@ const BOOKS_DATA = [
     id: 4,
     title: "The Psychology of Money",
     author: "Morgan Housel",
+    category: "Kinh doanh",
     price: 139000,
     originalPrice: 169000,
     cover:
@@ -72,11 +77,17 @@ const BOOKS_DATA = [
 ];
 
 function App() {
-  // ✅ Cart state — mảng các item trong giỏ hàng
+  // ✅ Cart state
   const [cart, setCart] = useState([]);
 
-  // ✅ Search state — từ khóa tìm kiếm (controlled từ SearchBar)
-  const [searchTerm, setSearchTerm] = useState('');
+  // ✅ Search state
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // ==========================
+  // ✅ Người B
+  // Category Filter State
+  // ==========================
+  const [activeCategory, setActiveCategory] = useState(null);
 
   const CATEGORIES = [
     {
@@ -106,22 +117,18 @@ function App() {
     },
   ];
 
-  // ✅ handleAddToCart: immutable update — KHÔNG dùng cart.push()
-  // Nếu sách đã có trong giỏ → tăng quantity
-  // Nếu chưa có → thêm mới với quantity = 1
+  // ✅ handleAddToCart
   function handleAddToCart(book) {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === book.id);
 
       if (existingItem) {
-        // ✅ Immutable update: map tạo mảng mới, tăng quantity
         return prevCart.map((item) =>
           item.id === book.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        // ✅ Spread tạo mảng mới — KHÔNG dùng push
         return [...prevCart, { ...book, quantity: 1 }];
       }
     });
@@ -129,22 +136,38 @@ function App() {
     alert(`✅ Đã thêm "${book.title}" vào giỏ hàng!`);
   }
 
-  // ✅ handleSearch: cập nhật searchTerm từ SearchBar
+  // Search
   function handleSearch(term) {
     setSearchTerm(term);
   }
 
-  // ✅ Derived state: cartCount — tổng số lượng sản phẩm trong giỏ
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  // ==========================
+  // ✅ Người B
+  // Derived State
+  // ==========================
+  const filteredBooks = BOOKS_DATA.filter((book) => {
+    const matchCategory =
+      !activeCategory || book.category === activeCategory;
+
+    const matchSearch =
+      searchTerm === "" ||
+      book.title.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchCategory && matchSearch;
+  });
+
+  // Cart Count
+  const cartCount = cart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
     <>
-      {/* ✅ Truyền cartCount xuống Header — lifting state up */}
       <Header cartCount={cartCount} />
 
       <Banner />
 
-      {/* ✅ SearchBar — controlled component */}
       <SectionWrapper
         title="Tìm kiếm"
         subtitle="Tìm cuốn sách bạn yêu thích"
@@ -158,7 +181,11 @@ function App() {
         subtitle="Khám phá các thể loại sách nổi bật"
         backgroundColor="#ffffff"
       >
-        <CategoryList categories={CATEGORIES} />
+        <CategoryList
+          categories={CATEGORIES}
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+        />
       </SectionWrapper>
 
       <SectionWrapper
@@ -167,7 +194,7 @@ function App() {
         backgroundColor="#f8f9fa"
       >
         <BookGrid
-          books={BOOKS_DATA}
+          books={filteredBooks}
           onAddToCart={handleAddToCart}
         />
       </SectionWrapper>
@@ -176,6 +203,5 @@ function App() {
     </>
   );
 }
-
 
 export default App;
