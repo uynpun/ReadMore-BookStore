@@ -1,10 +1,10 @@
-// Header.jsx - Tuần 2: Functional Component với inline CSS
+// Header.jsx - Tuần 4: Nhận cartCount qua props (lifting state up)
 // Người làm: A (Trưởng nhóm)
 // Chú ý: Tuần 2 dùng inline CSS, chưa dùng React-Bootstrap (để Tuần 5)
 
-function Header() {
-  // Hardcode cartCount = 0 (Tuần 4 sẽ nhận qua props)
-  const cartCount = 0;
+function Header({ cartCount = 0 }) {
+  // ✅ Tuần 4: cartCount nhận từ App qua props (không còn hardcode)
+
 
   const NAV_LINKS = [
     { label: 'Trang chủ', href: '#' },

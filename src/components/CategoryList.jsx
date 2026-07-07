@@ -1,5 +1,4 @@
 // CategoryList.jsx - Tuần 3
-// Người làm: B (Võ Trần Phương Uyên)
 // Refactor sử dụng Props
 
 function CategoryList({ categories }) {

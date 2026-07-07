@@ -1,8 +1,10 @@
-// App.jsx - Tuần 3
-// Refactor App.jsx
-// Truyền props cho CategoryList và BookGrid
-// Cung cấp BOOKS_DATA và handleAddToCart xuống BookGrid
+// App.jsx - Tuần 4
+// ✅ Thêm useState cho cart và searchTerm
+// ✅ handleAddToCart: immutable update, KHÔNG dùng cart.push()
+// ✅ Truyền cartCount xuống Header (lifting state up)
+// ✅ Tích hợp SearchBar (controlled component)
 
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Header from "./components/Header";
@@ -11,6 +13,7 @@ import CategoryList from "./components/CategoryList";
 import BookGrid from "./components/BookGrid";
 import Footer from "./components/Footer";
 import SectionWrapper from "./components/SectionWrapper";
+import SearchBar from "./components/SearchBar";
 
 // Dữ liệu sách đặt ở App — "single source of truth"
 const BOOKS_DATA = [
@@ -69,6 +72,12 @@ const BOOKS_DATA = [
 ];
 
 function App() {
+  // ✅ Cart state — mảng các item trong giỏ hàng
+  const [cart, setCart] = useState([]);
+
+  // ✅ Search state — từ khóa tìm kiếm (controlled từ SearchBar)
+  const [searchTerm, setSearchTerm] = useState('');
+
   const CATEGORIES = [
     {
       id: 1,
@@ -97,15 +106,52 @@ function App() {
     },
   ];
 
+  // ✅ handleAddToCart: immutable update — KHÔNG dùng cart.push()
+  // Nếu sách đã có trong giỏ → tăng quantity
+  // Nếu chưa có → thêm mới với quantity = 1
   function handleAddToCart(book) {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === book.id);
+
+      if (existingItem) {
+        // ✅ Immutable update: map tạo mảng mới, tăng quantity
+        return prevCart.map((item) =>
+          item.id === book.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        // ✅ Spread tạo mảng mới — KHÔNG dùng push
+        return [...prevCart, { ...book, quantity: 1 }];
+      }
+    });
+
     alert(`✅ Đã thêm "${book.title}" vào giỏ hàng!`);
   }
 
+  // ✅ handleSearch: cập nhật searchTerm từ SearchBar
+  function handleSearch(term) {
+    setSearchTerm(term);
+  }
+
+  // ✅ Derived state: cartCount — tổng số lượng sản phẩm trong giỏ
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <>
-      <Header />
+      {/* ✅ Truyền cartCount xuống Header — lifting state up */}
+      <Header cartCount={cartCount} />
 
       <Banner />
+
+      {/* ✅ SearchBar — controlled component */}
+      <SectionWrapper
+        title="Tìm kiếm"
+        subtitle="Tìm cuốn sách bạn yêu thích"
+        backgroundColor="#ffffff"
+      >
+        <SearchBar onSearch={handleSearch} />
+      </SectionWrapper>
 
       <SectionWrapper
         title="Danh mục sách"

@@ -1,5 +1,4 @@
-// BookCard.jsx - Tuần 3
-// Người làm: B
+// BookCard.jsx
 // ✅ Nhận props { book, onAddToCart } — xóa hardcode
 // ✅ Thêm discount badge
 // ✅ Nút disabled khi hết hàng (book.stock === 0)
