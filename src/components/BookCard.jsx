@@ -1,11 +1,8 @@
-// BookCard.jsx
-// ✅ Nhận props { book, onAddToCart } — xóa hardcode
-// ✅ Thêm discount badge
-// ✅ Nút disabled khi hết hàng (book.stock === 0)
+import { Card, Badge, Button } from "react-bootstrap";
 
 // Helper: format giá tiền VNĐ
 function formatPrice(price) {
-  return price.toLocaleString('vi-VN') + '₫';
+  return price.toLocaleString("vi-VN") + "₫";
 }
 
 // Helper: tính % giảm giá
@@ -18,190 +15,92 @@ function BookCard({ book, onAddToCart }) {
   const discount = calcDiscount(book.price, book.originalPrice);
   const outOfStock = book.stock === 0;
 
-  const styles = {
-    card: {
-      border: '1px solid #e5e7eb',
-      borderRadius: '12px',
-      overflow: 'hidden',
-      backgroundColor: '#fff',
-      boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-      display: 'flex',
-      flexDirection: 'column',
-      transition: 'box-shadow 0.2s, transform 0.2s',
-    },
-
-    imgWrap: {
-      position: 'relative',
-      height: '220px',
-      overflow: 'hidden',
-      backgroundColor: '#f3f4f6',
-    },
-
-    img: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      opacity: outOfStock ? 0.5 : 1,
-      transition: 'opacity 0.2s',
-    },
-
-    // ✅ Discount badge (chỉ hiện khi có giảm giá)
-    discountBadge: {
-      position: 'absolute',
-      top: '10px',
-      left: '10px',
-      backgroundColor: '#ef4444',
-      color: '#fff',
-      fontSize: '11px',
-      fontWeight: '700',
-      padding: '3px 8px',
-      borderRadius: '4px',
-      letterSpacing: '0.3px',
-    },
-
-    // ✅ Badge hết hàng
-    outOfStockBadge: {
-      position: 'absolute',
-      top: '10px',
-      right: '10px',
-      backgroundColor: '#6b7280',
-      color: '#fff',
-      fontSize: '11px',
-      fontWeight: '700',
-      padding: '3px 8px',
-      borderRadius: '4px',
-    },
-
-    body: {
-      padding: '14px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '6px',
-      flex: 1,
-    },
-
-    title: {
-      fontWeight: '700',
-      fontSize: '15px',
-      color: '#111827',
-      margin: 0,
-      lineHeight: '1.4',
-    },
-
-    author: {
-      fontSize: '13px',
-      color: '#6b7280',
-      margin: 0,
-    },
-
-    rating: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '4px',
-      fontSize: '13px',
-      color: '#f59e0b',
-    },
-
-    priceRow: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      marginTop: '4px',
-    },
-
-    price: {
-      fontWeight: '700',
-      fontSize: '16px',
-      color: '#0d6efd',
-    },
-
-    originalPrice: {
-      fontSize: '13px',
-      color: '#9ca3af',
-      textDecoration: 'line-through',
-    },
-
-    // ✅ Nút bình thường
-    btn: {
-      marginTop: '10px',
-      padding: '9px',
-      backgroundColor: '#0d6efd',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '8px',
-      fontWeight: '600',
-      fontSize: '14px',
-      cursor: 'pointer',
-      width: '100%',
-      transition: 'background-color 0.2s',
-    },
-
-    // ✅ Nút disabled khi hết hàng
-    btnDisabled: {
-      marginTop: '10px',
-      padding: '9px',
-      backgroundColor: '#d1d5db',
-      color: '#9ca3af',
-      border: 'none',
-      borderRadius: '8px',
-      fontWeight: '600',
-      fontSize: '14px',
-      cursor: 'not-allowed',
-      width: '100%',
-    },
-  };
-
   return (
-    <div style={styles.card}>
-      <div style={styles.imgWrap}>
-        <img src={book.cover} alt={book.title} style={styles.img} />
+    <Card className="h-100 shadow-sm border-0">
 
-        {/* ✅ Discount badge — chỉ hiện khi discount > 0 */}
+      <div className="position-relative">
+
+        <Card.Img
+          variant="top"
+          src={book.cover}
+          alt={book.title}
+          style={{
+            height: "260px",
+            objectFit: "cover",
+            opacity: outOfStock ? 0.5 : 1,
+          }}
+        />
+
         {discount > 0 && (
-          <span style={styles.discountBadge}>-{discount}%</span>
+          <Badge
+            bg="danger"
+            className="position-absolute top-0 start-0 m-2"
+          >
+            -{discount}%
+          </Badge>
         )}
 
-        {/* ✅ Hết hàng badge */}
         {outOfStock && (
-          <span style={styles.outOfStockBadge}>Hết hàng</span>
+          <Badge
+            bg="secondary"
+            className="position-absolute top-0 end-0 m-2"
+          >
+            Hết hàng
+          </Badge>
         )}
+
       </div>
 
-      <div style={styles.body}>
-        <p style={styles.title}>{book.title}</p>
-        <p style={styles.author}>{book.author}</p>
+      <Card.Body className="d-flex flex-column">
 
-        {/* Rating — chỉ hiện khi có */}
+        <Card.Title className="fs-5">
+          {book.title}
+        </Card.Title>
+
+        <Card.Text className="text-muted mb-1">
+          {book.author}
+        </Card.Text>
+
         {book.rating && (
-          <div style={styles.rating}>
+          <Card.Text className="text-warning mb-2">
             ⭐ {book.rating}
+
             {book.reviewCount && (
-              <span style={{ color: '#9ca3af' }}>({book.reviewCount})</span>
+              <span className="text-secondary">
+                {" "}
+                ({book.reviewCount})
+              </span>
             )}
-          </div>
+          </Card.Text>
         )}
 
-        <div style={styles.priceRow}>
-          <span style={styles.price}>{formatPrice(book.price)}</span>
-          {book.originalPrice && book.originalPrice > book.price && (
-            <span style={styles.originalPrice}>
+        <div className="mb-3">
+
+          <span className="fw-bold text-primary fs-5">
+            {formatPrice(book.price)}
+          </span>
+
+          {book.originalPrice > book.price && (
+            <span className="text-decoration-line-through text-muted ms-2">
               {formatPrice(book.originalPrice)}
             </span>
           )}
+
         </div>
 
-        {/* ✅ Nút disabled khi hết hàng */}
-        <button
-          style={outOfStock ? styles.btnDisabled : styles.btn}
+        <Button
+          className="mt-auto"
+          variant={outOfStock ? "secondary" : "primary"}
           disabled={outOfStock}
-          onClick={() => !outOfStock && onAddToCart && onAddToCart(book)}
+          onClick={() => onAddToCart(book)}
         >
-          {outOfStock ? '🚫 Hết hàng' : '🛒 Thêm vào giỏ'}
-        </button>
-      </div>
-    </div>
+          {outOfStock ? "🚫 Hết hàng" : "🛒 Thêm vào giỏ"}
+        </Button>
+
+      </Card.Body>
+
+    </Card>
   );
 }
-
 
 export default BookCard;

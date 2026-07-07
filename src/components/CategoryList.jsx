@@ -1,84 +1,61 @@
- // CategoryList.jsx - Tuần 4
-// Refactor sử dụng Props + Filter Category
+import { Container, Row, Col, Button, Badge } from "react-bootstrap";
 
 function CategoryList({
   categories,
   activeCategory,
   setActiveCategory,
 }) {
-  const styles = {
-    container: {
-      margin: "24px 0",
-    },
-
-    list: {
-      display: "flex",
-      gap: "15px",
-      flexWrap: "wrap",
-    },
-
-    item: {
-      padding: "12px 18px",
-      border: "1px solid #ddd",
-      borderRadius: "8px",
-      backgroundColor: "#fff",
-      cursor: "pointer",
-      transition: "0.3s",
-    },
-
-    activeItem: {
-      padding: "12px 18px",
-      border: "1px solid #0d6efd",
-      borderRadius: "8px",
-      backgroundColor: "#0d6efd",
-      color: "#fff",
-      cursor: "pointer",
-      transition: "0.3s",
-    },
-
-    hot: {
-      color: "red",
-      marginLeft: "8px",
-      fontWeight: "700",
-    },
-  };
-
   return (
-    <div style={styles.container}>
+    <Container className="my-4">
       {categories.length > 0 ? (
-        <div style={styles.list}>
-          {/* Nút hiển thị tất cả */}
-          <div
-            style={!activeCategory ? styles.activeItem : styles.item}
-            onClick={() => setActiveCategory(null)}
-          >
-            📖 Tất cả
-          </div>
+        <Row className="g-3 justify-content-center">
+
+          {/* Tất cả */}
+          <Col xs={12} sm={6} md={4} lg={2}>
+            <Button
+              variant={!activeCategory ? "primary" : "outline-primary"}
+              className="w-100"
+              onClick={() => setActiveCategory(null)}
+            >
+              📖 Tất cả
+            </Button>
+          </Col>
 
           {categories.map((category) => (
-            <div
+            <Col
+              xs={12}
+              sm={6}
+              md={4}
+              lg={2}
               key={category.id}
-              onClick={() => setActiveCategory(category.name)}
-              style={
-                activeCategory === category.name
-                  ? styles.activeItem
-                  : styles.item
-              }
             >
-              {category.icon} {category.name}
+              <Button
+                className="w-100"
+                variant={
+                  activeCategory === category.name
+                    ? "primary"
+                    : "outline-primary"
+                }
+                onClick={() => setActiveCategory(category.name)}
+              >
+                {category.icon} {category.name}
 
-              {category.name === "Kinh doanh" && (
-                <span style={styles.hot}> HOT</span>
-              )}
-            </div>
+                {category.name === "Kinh doanh" && (
+                  <Badge bg="danger" className="ms-2">
+                    HOT
+                  </Badge>
+                )}
+              </Button>
+            </Col>
           ))}
-        </div>
+        </Row>
       ) : (
-        <p>Không có danh mục.</p>
+        <p className="text-center text-muted">
+          Không có danh mục.
+        </p>
       )}
-    </div>
+    </Container>
   );
 }
-
 
 export default CategoryList;
