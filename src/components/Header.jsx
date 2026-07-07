@@ -6,6 +6,8 @@ function Header({ cartCount = 0 }) {
   // ✅ Tuần 4: cartCount nhận từ App qua props (không còn hardcode)
 
 
+  
+
   const NAV_LINKS = [
     { label: 'Trang chủ', href: '#' },
     { label: 'Danh mục', href: '#categories' },
