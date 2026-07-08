@@ -1,20 +1,21 @@
-// App.jsx - Tuần 4
-// ✅ Thêm useState cho cart và searchTerm
-// ✅ handleAddToCart: immutable update, KHÔNG dùng cart.push()
-// ✅ Truyền cartCount xuống Header (lifting state up)
-// ✅ Tích hợp SearchBar (controlled component)
-// ✅ Người B: Filter Category + Derived State
+// App.jsx - Tuần 6
+// ✅ Cấu hình Routes với react-router-dom
+// ✅ Layout: Header + Routes + Footer (Header/Footer luôn hiển thị)
+// ✅ ProtectedRoute bảo vệ trang Cart (phải có item trong giỏ)
+// ✅ Route "*" → NotFoundPage (404)
+// ✅ Route "/book/:id" → placeholder cho người B (BookDetailPage)
 
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Header from "./components/Header";
-import Banner from "./components/Banner";
-import CategoryList from "./components/CategoryList";
-import BookGrid from "./components/BookGrid";
 import Footer from "./components/Footer";
-import SectionWrapper from "./components/SectionWrapper";
-import SearchBar from "./components/SearchBar";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+// Pages
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 // Dữ liệu sách đặt ở App — "single source of truth"
 const BOOKS_DATA = [
@@ -83,10 +84,7 @@ function App() {
   // ✅ Search state
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ==========================
-  // ✅ Người B
-  // Category Filter State
-  // ==========================
+  // ✅ Category Filter State (Người B)
   const [activeCategory, setActiveCategory] = useState(null);
 
   const CATEGORIES = [
@@ -117,7 +115,7 @@ function App() {
     },
   ];
 
-  // ✅ handleAddToCart
+  // ✅ handleAddToCart — immutable update
   function handleAddToCart(book) {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === book.id);
@@ -136,15 +134,12 @@ function App() {
     alert(`✅ Đã thêm "${book.title}" vào giỏ hàng!`);
   }
 
-  // Search
+  // Search handler
   function handleSearch(term) {
     setSearchTerm(term);
   }
 
-  // ==========================
-  // ✅ Người B
-  // Derived State
-  // ==========================
+  // ✅ Derived State — filteredBooks (Người B)
   const filteredBooks = BOOKS_DATA.filter((book) => {
     const matchCategory =
       !activeCategory || book.category === activeCategory;
@@ -156,7 +151,7 @@ function App() {
     return matchCategory && matchSearch;
   });
 
-  // Cart Count
+  // ✅ Derived State — cartCount
   const cartCount = cart.reduce(
     (total, item) => total + item.quantity,
     0
@@ -164,41 +159,58 @@ function App() {
 
   return (
     <>
+      {/* ✅ Header luôn hiển thị — nằm ngoài Routes */}
       <Header cartCount={cartCount} />
 
-      <Banner />
-
-      <SectionWrapper
-        title="Tìm kiếm"
-        subtitle="Tìm cuốn sách bạn yêu thích"
-        backgroundColor="#ffffff"
-      >
-        <SearchBar onSearch={handleSearch} />
-      </SectionWrapper>
-
-      <SectionWrapper
-        title="Danh mục sách"
-        subtitle="Khám phá các thể loại sách nổi bật"
-        backgroundColor="#ffffff"
-      >
-        <CategoryList
-          categories={CATEGORIES}
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
+      {/* ✅ Routes — SPA routing, không reload trang */}
+      <Routes>
+        {/* ✅ Trang chủ */}
+        <Route
+          path="/"
+          element={
+            <HomePage
+              filteredBooks={filteredBooks}
+              onAddToCart={handleAddToCart}
+              onSearch={handleSearch}
+              categories={CATEGORIES}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+            />
+          }
         />
-      </SectionWrapper>
 
-      <SectionWrapper
-        title="Sách nổi bật"
-        subtitle="Những cuốn sách được yêu thích"
-        backgroundColor="#f8f9fa"
-      >
-        <BookGrid
-          books={filteredBooks}
-          onAddToCart={handleAddToCart}
+        {/* ✅ Chi tiết sách — dynamic route (Người B sẽ tạo BookDetailPage) */}
+        <Route
+          path="/book/:id"
+          element={
+            <div className="text-center py-5">
+              <h2>📖 Trang chi tiết sách</h2>
+              <p className="text-muted">Người B sẽ tạo BookDetailPage ở đây</p>
+            </div>
+          }
         />
-      </SectionWrapper>
 
+        {/* ✅ Giỏ hàng — ProtectedRoute (phải có sản phẩm mới vào được) */}
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute
+              isAllowed={cart.length > 0}
+              redirectTo="/"
+            >
+              <div className="text-center py-5">
+                <h2>🛒 Giỏ hàng ({cartCount} sản phẩm)</h2>
+                <p className="text-muted">Người B sẽ tạo CartPage ở đây</p>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ 404 — catch-all route */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+
+      {/* ✅ Footer luôn hiển thị — nằm ngoài Routes */}
       <Footer />
     </>
   );
