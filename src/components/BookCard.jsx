@@ -102,5 +102,4 @@ function BookCard({ book, onAddToCart }) {
     </Card>
   );
 }
-
 export default BookCard;

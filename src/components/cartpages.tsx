@@ -89,5 +89,4 @@ function CartPage({ cart = [] }: { cart?: CartItem[] }) {
     </Container>
   );
 }
-
 export default CartPage;
