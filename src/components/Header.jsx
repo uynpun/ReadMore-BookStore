@@ -1,53 +1,60 @@
-// Header.jsx - Tuần 5
-// Người làm: A (Trưởng nhóm)
-// ✅ Thay inline CSS bằng React-Bootstrap Navbar
-// ✅ Responsive: expand="lg" → hamburger menu trên mobile
-// ✅ Badge hiển thị cartCount từ props (lifting state up)
-
-import { Navbar, Nav, Container, Badge, Button } from 'react-bootstrap';
+import { Navbar, Nav, Container, Badge, Button } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
 function Header({ cartCount = 0 }) {
   const NAV_LINKS = [
-    { label: 'Trang chủ', href: '#' },
-    { label: 'Danh mục', href: '#categories' },
-    { label: 'Bán chạy', href: '#bestsellers' },
-    { label: 'Mới nhất', href: '#new-arrivals' },
+    { label: "Trang chủ", to: "/" },
+    { label: "Danh mục", to: "/categories" },
+    { label: "Bán chạy", to: "/bestsellers" },
+    { label: "Mới nhất", to: "/new-arrivals" },
   ];
 
   return (
-    // ✅ Navbar: bg="primary", variant="dark", sticky="top"
-    // ✅ expand="lg" → collapse thành hamburger khi < lg (992px)
-    <Navbar bg="primary" variant="dark" expand="lg" sticky="top"
+    <Navbar
+      bg="primary"
+      variant="dark"
+      expand="lg"
+      sticky="top"
       className="shadow-sm"
     >
       <Container>
-        {/* ✅ Logo — Navbar.Brand */}
-        <Navbar.Brand href="#" className="fw-bold fs-5 d-flex align-items-center gap-2">
+        {/* Logo */}
+        <Navbar.Brand
+          as={NavLink}
+          to="/"
+          className="fw-bold fs-5 d-flex align-items-center gap-2"
+        >
           <span>📚</span>
           <span>ReadMore</span>
         </Navbar.Brand>
 
-        {/* ✅ Toggle button cho mobile */}
+        {/* Nút menu mobile */}
         <Navbar.Toggle aria-controls="main-navbar" />
 
-        {/* ✅ Collapsible nav links */}
         <Navbar.Collapse id="main-navbar">
+          {/* Menu */}
           <Nav className="me-auto">
             {NAV_LINKS.map((link) => (
-              <Nav.Link key={link.label} href={link.href}>
+              <Nav.Link
+                key={link.label}
+                as={NavLink}
+                to={link.to}
+                end={link.to === "/"}
+              >
                 {link.label}
               </Nav.Link>
             ))}
           </Nav>
 
-          {/* ✅ Cart button với Badge — bên phải */}
+          {/* Nút giỏ hàng */}
           <Button
+            as={NavLink}
+            to="/cart"
             variant="outline-light"
             className="position-relative d-flex align-items-center gap-2"
-            aria-label={`Giỏ hàng, ${cartCount} sản phẩm`}
           >
             🛒 Giỏ hàng
-            {/* ✅ Badge: chỉ hiện khi có sản phẩm */}
+
             {cartCount > 0 && (
               <Badge
                 bg="danger"
