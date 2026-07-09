@@ -1,11 +1,12 @@
 import { Card, Badge, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-// Helper: format giá tiền VNĐ
+// Format giá tiền
 function formatPrice(price) {
   return price.toLocaleString("vi-VN") + "₫";
 }
 
-// Helper: tính % giảm giá
+// Tính % giảm giá
 function calcDiscount(price, originalPrice) {
   if (!originalPrice || originalPrice <= price) return 0;
   return Math.round(((originalPrice - price) / originalPrice) * 100);
@@ -18,49 +19,58 @@ function BookCard({ book, onAddToCart }) {
   return (
     <Card className="h-100 shadow-sm border-0">
 
-      <div className="position-relative">
+      {/* Ảnh sách */}
+      <Link to={`/books/${book.id}`} className="text-decoration-none">
+        <div className="position-relative">
+          <Card.Img
+            variant="top"
+            src={book.cover}
+            alt={book.title}
+            style={{
+              height: "260px",
+              objectFit: "cover",
+              opacity: outOfStock ? 0.5 : 1,
+            }}
+          />
 
-        <Card.Img
-          variant="top"
-          src={book.cover}
-          alt={book.title}
-          style={{
-            height: "260px",
-            objectFit: "cover",
-            opacity: outOfStock ? 0.5 : 1,
-          }}
-        />
+          {discount > 0 && (
+            <Badge
+              bg="danger"
+              className="position-absolute top-0 start-0 m-2"
+            >
+              -{discount}%
+            </Badge>
+          )}
 
-        {discount > 0 && (
-          <Badge
-            bg="danger"
-            className="position-absolute top-0 start-0 m-2"
-          >
-            -{discount}%
-          </Badge>
-        )}
-
-        {outOfStock && (
-          <Badge
-            bg="secondary"
-            className="position-absolute top-0 end-0 m-2"
-          >
-            Hết hàng
-          </Badge>
-        )}
-
-      </div>
+          {outOfStock && (
+            <Badge
+              bg="secondary"
+              className="position-absolute top-0 end-0 m-2"
+            >
+              Hết hàng
+            </Badge>
+          )}
+        </div>
+      </Link>
 
       <Card.Body className="d-flex flex-column">
 
-        <Card.Title className="fs-5">
-          {book.title}
+        {/* Tên sách */}
+        <Card.Title>
+          <Link
+            to={`/books/${book.id}`}
+            className="text-decoration-none text-dark"
+          >
+            {book.title}
+          </Link>
         </Card.Title>
 
+        {/* Tác giả */}
         <Card.Text className="text-muted mb-1">
           {book.author}
         </Card.Text>
 
+        {/* Đánh giá */}
         {book.rating && (
           <Card.Text className="text-warning mb-2">
             ⭐ {book.rating}
@@ -74,8 +84,8 @@ function BookCard({ book, onAddToCart }) {
           </Card.Text>
         )}
 
+        {/* Giá */}
         <div className="mb-3">
-
           <span className="fw-bold text-primary fs-5">
             {formatPrice(book.price)}
           </span>
@@ -85,9 +95,9 @@ function BookCard({ book, onAddToCart }) {
               {formatPrice(book.originalPrice)}
             </span>
           )}
-
         </div>
 
+        {/* Nút thêm giỏ hàng */}
         <Button
           className="mt-auto"
           variant={outOfStock ? "secondary" : "primary"}
@@ -98,8 +108,8 @@ function BookCard({ book, onAddToCart }) {
         </Button>
 
       </Card.Body>
-
     </Card>
   );
 }
+
 export default BookCard;

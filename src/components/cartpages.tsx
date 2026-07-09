@@ -1,58 +1,110 @@
 import { Container, Row, Col, Card, Button, Table } from "react-bootstrap";
 
-type CartItem = {
-  id: string | number;
-  title: string;
-  price: number;
-  quantity: number;
-};
-
-function CartPage({ cart = [] }: { cart?: CartItem[] }) {
+function CartPage({
+  cart = [],
+  increaseQuantity,
+  decreaseQuantity,
+  removeItem,
+}) {
   const total = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
+  const formatPrice = (price) =>
+    price.toLocaleString("vi-VN") + "₫";
+
   return (
     <Container className="my-5">
-      <h2 className="mb-4">🛒 Giỏ hàng</h2>
+      <h2 className="mb-4 text-center">🛒 Giỏ hàng</h2>
 
-      <Row>
+      <Row className="g-4">
         {/* Danh sách sản phẩm */}
         <Col lg={8}>
           <Card className="shadow-sm">
+            <Card.Header className="fw-bold">
+              Danh sách sản phẩm
+            </Card.Header>
+
             <Card.Body>
               {cart.length === 0 ? (
-                <p className="text-center text-muted">
-                  Giỏ hàng đang trống.
-                </p>
+                <div className="text-center py-5">
+                  <h5 className="text-muted">
+                    Giỏ hàng đang trống
+                  </h5>
+
+                  <p className="text-secondary">
+                    Hãy thêm một vài cuốn sách nhé!
+                  </p>
+                </div>
               ) : (
-                <Table responsive hover>
+                <Table responsive hover align="middle">
                   <thead>
                     <tr>
                       <th>Sách</th>
                       <th>Giá</th>
                       <th>Số lượng</th>
                       <th>Thành tiền</th>
+                      <th></th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {cart.map((item) => (
                       <tr key={item.id}>
-                        <td>{item.title}</td>
-
                         <td>
-                          {item.price.toLocaleString("vi-VN")}₫
+                          <strong>{item.title}</strong>
                         </td>
 
-                        <td>{item.quantity}</td>
+                        <td>{formatPrice(item.price)}</td>
 
                         <td>
-                          {(item.price * item.quantity).toLocaleString(
-                            "vi-VN"
-                          )}
-                          ₫
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() =>
+                              decreaseQuantity &&
+                              decreaseQuantity(item.id)
+                            }
+                          >
+                            −
+                          </Button>
+
+                          <span className="mx-3 fw-bold">
+                            {item.quantity}
+                          </span>
+
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() =>
+                              increaseQuantity &&
+                              increaseQuantity(item.id)
+                            }
+                          >
+                            +
+                          </Button>
+                        </td>
+
+                        <td>
+                          <strong>
+                            {formatPrice(
+                              item.price * item.quantity
+                            )}
+                          </strong>
+                        </td>
+
+                        <td>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() =>
+                              removeItem &&
+                              removeItem(item.id)
+                            }
+                          >
+                            Xóa
+                          </Button>
                         </td>
                       </tr>
                     ))}
@@ -63,21 +115,36 @@ function CartPage({ cart = [] }: { cart?: CartItem[] }) {
           </Card>
         </Col>
 
-        {/* Tổng tiền */}
+        {/* Tổng thanh toán */}
         <Col lg={4}>
           <Card className="shadow-sm">
+            <Card.Header className="fw-bold">
+              Thanh toán
+            </Card.Header>
+
             <Card.Body>
-              <h4>Tổng thanh toán</h4>
+              <div className="d-flex justify-content-between mb-3">
+                <span>Tổng sản phẩm:</span>
 
-              <hr />
+                <strong>
+                  {cart.reduce(
+                    (sum, item) => sum + item.quantity,
+                    0
+                  )}
+                </strong>
+              </div>
 
-              <h3 className="text-primary">
-                {total.toLocaleString("vi-VN")}₫
-              </h3>
+              <div className="d-flex justify-content-between mb-4">
+                <span>Tổng tiền:</span>
+
+                <strong className="text-primary fs-4">
+                  {formatPrice(total)}
+                </strong>
+              </div>
 
               <Button
                 variant="success"
-                className="w-100 mt-3"
+                className="w-100"
                 disabled={cart.length === 0}
               >
                 Thanh toán
@@ -89,4 +156,5 @@ function CartPage({ cart = [] }: { cart?: CartItem[] }) {
     </Container>
   );
 }
+
 export default CartPage;
