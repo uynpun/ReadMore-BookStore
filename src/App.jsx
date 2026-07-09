@@ -1,13 +1,13 @@
-// App.jsx - Tuần 6
-// ✅ Cấu hình Routes với react-router-dom
-// ✅ Layout: Header + Routes + Footer (Header/Footer luôn hiển thị)
-// ✅ ProtectedRoute bảo vệ trang Cart (phải có item trong giỏ)
-// ✅ Route "*" → NotFoundPage (404)
-// ✅ Route "/book/:id" → placeholder cho người B (BookDetailPage)
+// App.jsx - Tuần 7
+// ✅ Sử dụng useCart() từ CartContext thay vì quản lý cart state cục bộ
+// ✅ Không còn prop drilling cart xuống Header / CartPage
+// ✅ Giữ nguyên BOOKS_DATA, search, category filter (chưa refactor)
 
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+import { useCart } from "./context/CartContext";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -78,10 +78,10 @@ const BOOKS_DATA = [
 ];
 
 function App() {
-  // ✅ Cart state
-  const [cart, setCart] = useState([]);
+  // ✅ Lấy cart state từ Context (không còn useState cục bộ)
+  const { cart, cartCount, addToCart } = useCart();
 
-  // ✅ Search state
+  // ✅ Search state (vẫn giữ ở App — chưa cần context riêng)
   const [searchTerm, setSearchTerm] = useState("");
 
   // ✅ Category Filter State (Người B)
@@ -115,22 +115,9 @@ function App() {
     },
   ];
 
-  // ✅ handleAddToCart — immutable update
+  // ✅ handleAddToCart — giờ dùng addToCart từ context
   function handleAddToCart(book) {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === book.id);
-
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === book.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        return [...prevCart, { ...book, quantity: 1 }];
-      }
-    });
-
+    addToCart(book);
     alert(`✅ Đã thêm "${book.title}" vào giỏ hàng!`);
   }
 
@@ -151,15 +138,9 @@ function App() {
     return matchCategory && matchSearch;
   });
 
-  // ✅ Derived State — cartCount
-  const cartCount = cart.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-
   return (
     <>
-      {/* ✅ Header luôn hiển thị — nằm ngoài Routes */}
+      {/* ✅ Header — cartCount lấy từ context (Người B sẽ refactor Header dùng useCart) */}
       <Header cartCount={cartCount} />
 
       {/* ✅ Routes — SPA routing, không reload trang */}
