@@ -1,7 +1,7 @@
-// App.jsx - Tuần 7
-// ✅ Sử dụng useCart() từ CartContext thay vì quản lý cart state cục bộ
-// ✅ Không còn prop drilling cart xuống Header / CartPage
-// ✅ Giữ nguyên BOOKS_DATA, search, category filter (chưa refactor)
+// App.jsx - Tuần 8
+// ✅ Xóa BOOKS_DATA hardcode — dữ liệu giờ nằm ở db.json (json-server)
+// ✅ Thêm route /books → BookListPage (fetch thật từ API)
+// ✅ HomePage vẫn giữ filteredBooks từ BOOKS_DATA tạm (Người B sẽ refactor)
 
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
@@ -15,9 +15,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 // Pages
 import HomePage from "./pages/HomePage";
+import BookListPage from "./pages/BookListPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
-// Dữ liệu sách đặt ở App — "single source of truth"
+// Dữ liệu sách tĩnh cho HomePage (tạm giữ — sẽ chuyển sang fetch API sau)
 const BOOKS_DATA = [
   {
     id: 1,
@@ -78,44 +79,24 @@ const BOOKS_DATA = [
 ];
 
 function App() {
-  // ✅ Lấy cart state từ Context (không còn useState cục bộ)
+  // ✅ Lấy cart state từ Context
   const { cart, cartCount, addToCart } = useCart();
 
-  // ✅ Search state (vẫn giữ ở App — chưa cần context riêng)
+  // ✅ Search state
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ✅ Category Filter State (Người B)
+  // ✅ Category Filter State
   const [activeCategory, setActiveCategory] = useState(null);
 
   const CATEGORIES = [
-    {
-      id: 1,
-      name: "Tâm lý - Kỹ năng sống",
-      icon: "🧠",
-    },
-    {
-      id: 2,
-      name: "Văn học",
-      icon: "📚",
-    },
-    {
-      id: 3,
-      name: "Lịch sử",
-      icon: "🏛️",
-    },
-    {
-      id: 4,
-      name: "Kinh doanh",
-      icon: "💼",
-    },
-    {
-      id: 5,
-      name: "Phát triển bản thân",
-      icon: "🌱",
-    },
+    { id: 1, name: "Tâm lý - Kỹ năng sống", icon: "🧠" },
+    { id: 2, name: "Văn học", icon: "📚" },
+    { id: 3, name: "Lịch sử", icon: "🏛️" },
+    { id: 4, name: "Kinh doanh", icon: "💼" },
+    { id: 5, name: "Phát triển bản thân", icon: "🌱" },
   ];
 
-  // ✅ handleAddToCart — giờ dùng addToCart từ context
+  // ✅ handleAddToCart
   function handleAddToCart(book) {
     addToCart(book);
     alert(`✅ Đã thêm "${book.title}" vào giỏ hàng!`);
@@ -126,24 +107,20 @@ function App() {
     setSearchTerm(term);
   }
 
-  // ✅ Derived State — filteredBooks (Người B)
+  // ✅ Derived State — filteredBooks
   const filteredBooks = BOOKS_DATA.filter((book) => {
     const matchCategory =
       !activeCategory || book.category === activeCategory;
-
     const matchSearch =
       searchTerm === "" ||
       book.title.toLowerCase().includes(searchTerm.toLowerCase());
-
     return matchCategory && matchSearch;
   });
 
   return (
     <>
-      {/* ✅ Header — cartCount lấy từ context (Người B sẽ refactor Header dùng useCart) */}
       <Header cartCount={cartCount} />
 
-      {/* ✅ Routes — SPA routing, không reload trang */}
       <Routes>
         {/* ✅ Trang chủ */}
         <Route
@@ -160,7 +137,10 @@ function App() {
           }
         />
 
-        {/* ✅ Chi tiết sách — dynamic route (Người B sẽ tạo BookDetailPage) */}
+        {/* ✅ Tuần 8: Danh sách sách — fetch thật từ json-server */}
+        <Route path="/books" element={<BookListPage />} />
+
+        {/* ✅ Chi tiết sách */}
         <Route
           path="/book/:id"
           element={
@@ -171,7 +151,7 @@ function App() {
           }
         />
 
-        {/* ✅ Giỏ hàng — ProtectedRoute (phải có sản phẩm mới vào được) */}
+        {/* ✅ Giỏ hàng */}
         <Route
           path="/cart"
           element={
@@ -187,16 +167,13 @@ function App() {
           }
         />
 
-        {/* ✅ 404 — catch-all route */}
+        {/* ✅ 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
-      {/* ✅ Footer luôn hiển thị — nằm ngoài Routes */}
       <Footer />
     </>
   );
 }
-
-
 
 export default App;
