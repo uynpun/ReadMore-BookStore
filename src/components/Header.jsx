@@ -1,7 +1,10 @@
 import { Navbar, Nav, Container, Badge, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 function Header({ cartCount = 0 }) {
+  const { theme, toggleTheme } = useTheme();
+
   const NAV_LINKS = [
     { label: "Trang chủ", to: "/" },
     { label: "Danh mục", to: "/categories" },
@@ -11,7 +14,7 @@ function Header({ cartCount = 0 }) {
 
   return (
     <Navbar
-      bg="primary"
+      bg={theme === "light" ? "primary" : "dark"}
       variant="dark"
       expand="lg"
       sticky="top"
@@ -28,11 +31,11 @@ function Header({ cartCount = 0 }) {
           <span>ReadMore</span>
         </Navbar.Brand>
 
-        {/* Nút menu mobile */}
+        {/* Mobile Toggle */}
         <Navbar.Toggle aria-controls="main-navbar" />
 
         <Navbar.Collapse id="main-navbar">
-          {/* Menu */}
+          {/* Navigation */}
           <Nav className="me-auto">
             {NAV_LINKS.map((link) => (
               <Nav.Link
@@ -46,7 +49,16 @@ function Header({ cartCount = 0 }) {
             ))}
           </Nav>
 
-          {/* Nút giỏ hàng */}
+          {/* Theme Button */}
+          <Button
+            variant="warning"
+            className="me-3"
+            onClick={toggleTheme}
+          >
+            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+          </Button>
+
+          {/* Cart Button */}
           <Button
             as={NavLink}
             to="/cart"

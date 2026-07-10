@@ -1,5 +1,6 @@
 import { Card, Badge, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 // Format giá tiền
 function formatPrice(price) {
@@ -12,14 +13,15 @@ function calcDiscount(price, originalPrice) {
   return Math.round(((originalPrice - price) / originalPrice) * 100);
 }
 
-function BookCard({ book, onAddToCart }) {
+function BookCard({ book }) {
+  const { addToCart } = useCart();
+
   const discount = calcDiscount(book.price, book.originalPrice);
   const outOfStock = book.stock === 0;
 
   return (
     <Card className="h-100 shadow-sm border-0">
 
-      {/* Ảnh sách */}
       <Link to={`/books/${book.id}`} className="text-decoration-none">
         <div className="position-relative">
           <Card.Img
@@ -55,7 +57,6 @@ function BookCard({ book, onAddToCart }) {
 
       <Card.Body className="d-flex flex-column">
 
-        {/* Tên sách */}
         <Card.Title>
           <Link
             to={`/books/${book.id}`}
@@ -65,16 +66,13 @@ function BookCard({ book, onAddToCart }) {
           </Link>
         </Card.Title>
 
-        {/* Tác giả */}
         <Card.Text className="text-muted mb-1">
           {book.author}
         </Card.Text>
 
-        {/* Đánh giá */}
         {book.rating && (
           <Card.Text className="text-warning mb-2">
             ⭐ {book.rating}
-
             {book.reviewCount && (
               <span className="text-secondary">
                 {" "}
@@ -84,7 +82,6 @@ function BookCard({ book, onAddToCart }) {
           </Card.Text>
         )}
 
-        {/* Giá */}
         <div className="mb-3">
           <span className="fw-bold text-primary fs-5">
             {formatPrice(book.price)}
@@ -97,12 +94,11 @@ function BookCard({ book, onAddToCart }) {
           )}
         </div>
 
-        {/* Nút thêm giỏ hàng */}
         <Button
           className="mt-auto"
           variant={outOfStock ? "secondary" : "primary"}
           disabled={outOfStock}
-          onClick={() => onAddToCart(book)}
+          onClick={() => addToCart(book)}
         >
           {outOfStock ? "🚫 Hết hàng" : "🛒 Thêm vào giỏ"}
         </Button>
