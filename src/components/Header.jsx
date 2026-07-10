@@ -27,15 +27,14 @@ function Header({ cartCount = 0 }) {
           to="/"
           className="fw-bold fs-5 d-flex align-items-center gap-2"
         >
-          <span>📚</span>
-          <span>ReadMore</span>
+          📚 ReadMore
         </Navbar.Brand>
 
-        {/* Mobile Toggle */}
+        {/* Mobile Menu */}
         <Navbar.Toggle aria-controls="main-navbar" />
 
         <Navbar.Collapse id="main-navbar">
-          {/* Navigation */}
+          {/* Menu */}
           <Nav className="me-auto">
             {NAV_LINKS.map((link) => (
               <Nav.Link
@@ -49,21 +48,23 @@ function Header({ cartCount = 0 }) {
             ))}
           </Nav>
 
-          {/* Theme Button */}
+          {/* Theme */}
           <Button
             variant="warning"
             className="me-3"
             onClick={toggleTheme}
+            aria-label="Đổi giao diện"
           >
-            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+            {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
           </Button>
 
-          {/* Cart Button */}
+          {/* Cart */}
           <Button
             as={NavLink}
             to="/cart"
             variant="outline-light"
             className="position-relative d-flex align-items-center gap-2"
+            aria-label={`Giỏ hàng có ${cartCount} sản phẩm`}
           >
             🛒 Giỏ hàng
 
