@@ -1,20 +1,24 @@
-// main.jsx - Tuần 7
+// main.jsx - Tuần 8
 // ✅ Wrap App với BrowserRouter ở entry point
-// ✅ Wrap App với CartProvider — giỏ hàng dùng được ở mọi component
+// ✅ Wrap App với CartProvider + ThemeProvider
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
+import { ThemeProvider } from './context/ThemeContext'
 import './index.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <CartProvider>
-        <App />
-      </CartProvider>
+      <ThemeProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
 )
+
