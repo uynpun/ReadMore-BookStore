@@ -1,6 +1,7 @@
 import { Card, Badge, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 // Format giá tiền
 function formatPrice(price) {
@@ -16,14 +17,28 @@ function calcDiscount(price, originalPrice) {
 function BookCard({ book }) {
   const { addToCart } = useCart();
 
+  // ===== Week 9 =====
+  const [wishlist, setWishlist] = useLocalStorage("wishlist", []);
+
+  const isFavorite = wishlist.includes(book.id);
+
+  function toggleWishlist() {
+    if (isFavorite) {
+      setWishlist(wishlist.filter((id) => id !== book.id));
+    } else {
+      setWishlist([...wishlist, book.id]);
+    }
+  }
+
   const discount = calcDiscount(book.price, book.originalPrice);
   const outOfStock = book.stock === 0;
 
   return (
     <Card className="h-100 shadow-sm border-0">
 
-      <Link to={`/books/${book.id}`} className="text-decoration-none">
-        <div className="position-relative">
+      <div className="position-relative">
+
+        <Link to={`/books/${book.id}`} className="text-decoration-none">
           <Card.Img
             variant="top"
             src={book.cover}
@@ -34,26 +49,39 @@ function BookCard({ book }) {
               opacity: outOfStock ? 0.5 : 1,
             }}
           />
+        </Link>
 
-          {discount > 0 && (
-            <Badge
-              bg="danger"
-              className="position-absolute top-0 start-0 m-2"
-            >
-              -{discount}%
-            </Badge>
-          )}
+        {/* Badge giảm giá */}
+        {discount > 0 && (
+          <Badge
+            bg="danger"
+            className="position-absolute top-0 start-0 m-2"
+          >
+            -{discount}%
+          </Badge>
+        )}
 
-          {outOfStock && (
-            <Badge
-              bg="secondary"
-              className="position-absolute top-0 end-0 m-2"
-            >
-              Hết hàng
-            </Badge>
-          )}
-        </div>
-      </Link>
+        {/* Badge hết hàng */}
+        {outOfStock && (
+          <Badge
+            bg="secondary"
+            className="position-absolute top-0 end-0 m-2"
+          >
+            Hết hàng
+          </Badge>
+        )}
+
+        {/* ❤️ Wishlist */}
+        <Button
+          variant="light"
+          size="sm"
+          className="position-absolute bottom-0 end-0 m-2 rounded-circle"
+          onClick={toggleWishlist}
+        >
+          {isFavorite ? "❤️" : "🤍"}
+        </Button>
+
+      </div>
 
       <Card.Body className="d-flex flex-column">
 
