@@ -1,24 +1,39 @@
-// App.jsx - Tuần 8
-// ✅ Xóa BOOKS_DATA hardcode — dữ liệu giờ nằm ở db.json (json-server)
-// ✅ Thêm route /books → BookListPage (fetch thật từ API)
-// ✅ HomePage vẫn giữ filteredBooks từ BOOKS_DATA tạm (Người B sẽ refactor)
+// App.jsx - Tuần 10
+// ✅ Migrate sang Redux: useSelector thay useCart context
+// ✅ React.lazy + Suspense — lazy loading các page (code splitting)
+// ✅ CartPage thật (không còn placeholder)
 
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { useCart } from "./context/CartContext";
+import { selectCart, selectCartCount, addToCart } from "./store/cartSlice";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import ProtectedRoute from "./components/ProtectedRoute";
 
-// Pages
-import HomePage from "./pages/HomePage";
-import BookListPage from "./pages/BookListPage";
-import NotFoundPage from "./pages/NotFoundPage";
+// ✅ React.lazy — chỉ load page khi user truy cập route đó
+// → Giảm bundle size ban đầu, tăng tốc First Load
+const HomePage = lazy(() => import("./pages/HomePage"));
+const BookListPage = lazy(() => import("./pages/BookListPage"));
+const BookManagePage = lazy(() => import("./pages/BookManagePage"));
+const BookDetailPage = lazy(() => import("./pages/BookDetailPage"));
+const CartPage = lazy(() => import("./pages/CartPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
-// Dữ liệu sách tĩnh cho HomePage (tạm giữ — sẽ chuyển sang fetch API sau)
+// ✅ Loading fallback cho Suspense
+function PageLoader() {
+  return (
+    <div className="text-center py-5">
+      <Spinner animation="border" variant="primary" />
+      <p className="mt-3 text-muted">Đang tải trang...</p>
+    </div>
+  );
+}
+
+// Dữ liệu sách tĩnh cho HomePage (tạm giữ)
 const BOOKS_DATA = [
   {
     id: 1,
@@ -79,8 +94,10 @@ const BOOKS_DATA = [
 ];
 
 function App() {
-  // ✅ Lấy cart state từ Context
-  const { cart, cartCount, addToCart } = useCart();
+  // ✅ Redux: đọc cart từ store (không còn dùng useCart context)
+  const cart = useSelector(selectCart);
+  const cartCount = useSelector(selectCartCount);
+  const dispatch = useDispatch();
 
   // ✅ Search state
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,18 +113,16 @@ function App() {
     { id: 5, name: "Phát triển bản thân", icon: "🌱" },
   ];
 
-  // ✅ handleAddToCart
+  // ✅ handleAddToCart — dùng Redux dispatch
   function handleAddToCart(book) {
-    addToCart(book);
+    dispatch(addToCart(book));
     alert(`✅ Đã thêm "${book.title}" vào giỏ hàng!`);
   }
 
-  // Search handler
   function handleSearch(term) {
     setSearchTerm(term);
   }
 
-  // ✅ Derived State — filteredBooks
   const filteredBooks = BOOKS_DATA.filter((book) => {
     const matchCategory =
       !activeCategory || book.category === activeCategory;
@@ -119,57 +134,43 @@ function App() {
 
   return (
     <>
-      <Header cartCount={cartCount} />
+      {/* ✅ Header tự đọc cartCount từ Redux — không cần truyền props */}
+      <Header />
 
-      <Routes>
-        {/* ✅ Trang chủ */}
-        <Route
-          path="/"
-          element={
-            <HomePage
-              filteredBooks={filteredBooks}
-              onAddToCart={handleAddToCart}
-              onSearch={handleSearch}
-              categories={CATEGORIES}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-            />
-          }
-        />
+      {/* ✅ Suspense bọc Routes — hiện loading khi lazy page đang tải */}
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Trang chủ */}
+          <Route
+            path="/"
+            element={
+              <HomePage
+                filteredBooks={filteredBooks}
+                onAddToCart={handleAddToCart}
+                onSearch={handleSearch}
+                categories={CATEGORIES}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+              />
+            }
+          />
 
-        {/* ✅ Tuần 8: Danh sách sách — fetch thật từ json-server */}
-        <Route path="/books" element={<BookListPage />} />
+          {/* Danh sách sách — fetch từ json-server */}
+          <Route path="/books" element={<BookListPage />} />
 
-        {/* ✅ Chi tiết sách */}
-        <Route
-          path="/book/:id"
-          element={
-            <div className="text-center py-5">
-              <h2>📖 Trang chi tiết sách</h2>
-              <p className="text-muted">Người B sẽ tạo BookDetailPage ở đây</p>
-            </div>
-          }
-        />
+          {/* Quản lý sách — Admin CRUD */}
+          <Route path="/admin" element={<BookManagePage />} />
 
-        {/* ✅ Giỏ hàng */}
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute
-              isAllowed={cart.length > 0}
-              redirectTo="/"
-            >
-              <div className="text-center py-5">
-                <h2>🛒 Giỏ hàng ({cartCount} sản phẩm)</h2>
-                <p className="text-muted">Người B sẽ tạo CartPage ở đây</p>
-              </div>
-            </ProtectedRoute>
-          }
-        />
+          {/* Chi tiết sách */}
+          <Route path="/book/:id" element={<BookDetailPage />} />
 
-        {/* ✅ 404 */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          {/* ✅ Giỏ hàng — CartPage thật với Redux */}
+          <Route path="/cart" element={<CartPage />} />
+
+          {/* 404 */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
 
       <Footer />
     </>
