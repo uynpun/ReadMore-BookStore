@@ -1,15 +1,23 @@
+// Header.jsx - Tuần 10
+// Người làm: B
+// ✅ Migrate sang Redux: useSelector(selectCartCount) thay vì props cartCount
+// ✅ Không còn nhận cartCount qua props → tự đọc từ Redux store
+
 import { Navbar, Nav, Container, Badge, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCartCount } from "../store/cartSlice";
 import { useTheme } from "../context/ThemeContext";
 
-function Header({ cartCount = 0 }) {
+function Header() {
+  // ✅ Redux: đọc cartCount trực tiếp từ store (không cần props)
+  const cartCount = useSelector(selectCartCount);
   const { theme, toggleTheme } = useTheme();
 
   const NAV_LINKS = [
     { label: "Trang chủ", to: "/" },
-    { label: "Danh mục", to: "/categories" },
-    { label: "Bán chạy", to: "/bestsellers" },
-    { label: "Mới nhất", to: "/new-arrivals" },
+    { label: "Danh sách sách", to: "/books" },
+    { label: "Quản lý sách", to: "/admin" },
   ];
 
   return (
@@ -55,10 +63,10 @@ function Header({ cartCount = 0 }) {
             onClick={toggleTheme}
             aria-label="Đổi giao diện"
           >
-            {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
+            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
           </Button>
 
-          {/* Cart */}
+          {/* Cart — cartCount từ Redux store */}
           <Button
             as={NavLink}
             to="/cart"
