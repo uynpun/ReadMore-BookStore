@@ -1,7 +1,15 @@
-import { Card, Badge, Button } from "react-bootstrap";
+// BookCard.jsx - Tuần 10
+// Người làm: A
+// ✅ Migrate sang Redux Toolkit: useDispatch + addToCart action
+// ✅ Migrate sang Tailwind CSS v4 (một phần — giữ react-bootstrap Card/Badge)
+// ✅ Giữ nguyên wishlist từ tuần 9 (useLocalStorage)
+
+import { Card, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../store/cartSlice";
 import useLocalStorage from "../hooks/useLocalStorage";
+import toast from "react-hot-toast";
 
 // Format giá tiền
 function formatPrice(price) {
@@ -15,11 +23,11 @@ function calcDiscount(price, originalPrice) {
 }
 
 function BookCard({ book }) {
-  const { addToCart } = useCart();
+  // ✅ Redux: useDispatch thay vì useCart() context
+  const dispatch = useDispatch();
 
-  // ===== Week 9 =====
+  // ===== Week 9: Wishlist (giữ nguyên) =====
   const [wishlist, setWishlist] = useLocalStorage("wishlist", []);
-
   const isFavorite = wishlist.includes(book.id);
 
   function toggleWishlist() {
@@ -33,11 +41,16 @@ function BookCard({ book }) {
   const discount = calcDiscount(book.price, book.originalPrice);
   const outOfStock = book.stock === 0;
 
+  // ✅ Handler dùng Redux dispatch
+  function handleAddToCart() {
+    dispatch(addToCart(book));
+    toast.success(`Đã thêm "${book.title}" vào giỏ hàng!`);
+  }
+
   return (
-    <Card className="h-100 shadow-sm border-0">
+    <Card className="h-100 shadow-sm border-0 overflow-hidden transition-transform duration-200 hover:-translate-y-1">
 
-      <div className="position-relative">
-
+      <div className="relative">
         <Link to={`/books/${book.id}`} className="text-decoration-none">
           <Card.Img
             variant="top"
@@ -55,7 +68,7 @@ function BookCard({ book }) {
         {discount > 0 && (
           <Badge
             bg="danger"
-            className="position-absolute top-0 start-0 m-2"
+            className="absolute top-2 left-2"
           >
             -{discount}%
           </Badge>
@@ -65,30 +78,26 @@ function BookCard({ book }) {
         {outOfStock && (
           <Badge
             bg="secondary"
-            className="position-absolute top-0 end-0 m-2"
+            className="absolute top-2 right-2"
           >
             Hết hàng
           </Badge>
         )}
 
-        {/* ❤️ Wishlist */}
-        <Button
-          variant="light"
-          size="sm"
-          className="position-absolute bottom-0 end-0 m-2 rounded-circle"
+        {/* ❤️ Wishlist — Tailwind */}
+        <button
           onClick={toggleWishlist}
+          className="absolute bottom-2 right-2 bg-white/90 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center text-lg shadow-md transition-all duration-200 border-none cursor-pointer"
         >
           {isFavorite ? "❤️" : "🤍"}
-        </Button>
-
+        </button>
       </div>
 
-      <Card.Body className="d-flex flex-column">
-
+      <Card.Body className="flex flex-col">
         <Card.Title>
           <Link
             to={`/books/${book.id}`}
-            className="text-decoration-none text-dark"
+            className="text-decoration-none text-dark hover:text-blue-600 transition-colors"
           >
             {book.title}
           </Link>
@@ -103,34 +112,36 @@ function BookCard({ book }) {
             ⭐ {book.rating}
             {book.reviewCount && (
               <span className="text-secondary">
-                {" "}
-                ({book.reviewCount})
+                {" "}({book.reviewCount})
               </span>
             )}
           </Card.Text>
         )}
 
         <div className="mb-3">
-          <span className="fw-bold text-primary fs-5">
+          <span className="font-bold text-blue-600 text-xl">
             {formatPrice(book.price)}
           </span>
 
           {book.originalPrice > book.price && (
-            <span className="text-decoration-line-through text-muted ms-2">
+            <span className="line-through text-gray-400 ml-2 text-sm">
               {formatPrice(book.originalPrice)}
             </span>
           )}
         </div>
 
-        <Button
-          className="mt-auto"
-          variant={outOfStock ? "secondary" : "primary"}
+        {/* ✅ Nút thêm giỏ — Tailwind + Redux dispatch */}
+        <button
+          className={`mt-auto py-2.5 px-4 rounded-lg font-semibold text-white border-none cursor-pointer transition-all duration-200 ${
+            outOfStock
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+          }`}
           disabled={outOfStock}
-          onClick={() => addToCart(book)}
+          onClick={handleAddToCart}
         >
           {outOfStock ? "🚫 Hết hàng" : "🛒 Thêm vào giỏ"}
-        </Button>
-
+        </button>
       </Card.Body>
     </Card>
   );
