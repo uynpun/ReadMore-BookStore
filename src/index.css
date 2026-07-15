@@ -66,3 +66,8 @@ img {
 button {
   font-family: 'Inter', sans-serif;
 }
+
+/* Fix Bootstrap Navbar.Collapse conflict with Tailwind's .collapse */
+.navbar-collapse.collapse {
+  visibility: visible;
+}
