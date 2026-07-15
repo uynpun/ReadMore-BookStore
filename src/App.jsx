@@ -164,7 +164,7 @@ function App() {
           <Route path="/admin" element={<BookManagePage />} />
 
           {/* Chi tiết sách */}
-          <Route path="/book/:id" element={<BookDetailPage />} />
+          <Route path="/books/:id" element={<BookDetailPage />} />
 
           {/* ✅ Giỏ hàng — CartPage thật với Redux */}
           <Route path="/cart" element={<CartPage />} />
