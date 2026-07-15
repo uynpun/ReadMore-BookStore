@@ -8,6 +8,7 @@ import { Routes, Route } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Toaster } from "react-hot-toast";
 
 import { selectCart, selectCartCount, addToCart } from "./store/cartSlice";
 
@@ -134,6 +135,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-center" />
       {/* ✅ Header tự đọc cartCount từ Redux — không cần truyền props */}
       <Header />
 

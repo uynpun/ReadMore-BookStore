@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../store/cartSlice";
 import useLocalStorage from "../hooks/useLocalStorage";
+import toast from "react-hot-toast";
 
 // Format giá tiền
 function formatPrice(price) {
@@ -43,6 +44,7 @@ function BookCard({ book }) {
   // ✅ Handler dùng Redux dispatch
   function handleAddToCart() {
     dispatch(addToCart(book));
+    toast.success(`Đã thêm "${book.title}" vào giỏ hàng!`);
   }
 
   return (
