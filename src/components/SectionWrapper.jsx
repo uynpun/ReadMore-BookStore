@@ -1,50 +1,24 @@
-// SectionWrapper.jsx - Tuần 3
-// Người làm: A
-// Reusable wrapper component
+// SectionWrapper.jsx - Cập nhật cho Dark Mode & Tailwind
 
 function SectionWrapper({
   title,
   subtitle,
-  backgroundColor = "#f9fafb",
+  className = "",
   children,
 }) {
-  const styles = {
-    section: {
-      padding: "48px 24px",
-      backgroundColor,
-    },
-
-    container: {
-      maxWidth: "1100px",
-      margin: "0 auto",
-    },
-
-    header: {
-      marginBottom: subtitle ? "8px" : "32px",
-    },
-
-    title: {
-      fontSize: "28px",
-      fontWeight: "700",
-      color: "#111827",
-      margin: 0,
-    },
-
-    subtitle: {
-      fontSize: "15px",
-      color: "#6b7280",
-      marginTop: "6px",
-      marginBottom: "28px",
-    },
-  };
-
   return (
-    <section style={styles.section}>
-      <div style={styles.container}>
+    <section className={`py-12 px-6 transition-colors duration-300 ${className}`}>
+      <div className="max-w-6xl mx-auto">
         {title && (
-          <div style={styles.header}>
-            <h2 style={styles.title}>{title}</h2>
-            {subtitle && <p style={styles.subtitle}>{subtitle}</p>}
+          <div className={`text-center ${subtitle ? "mb-4" : "mb-10"}`}>
+            <h2 className="text-3xl font-[Outfit] font-bold text-[var(--text)] m-0">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="text-base text-[var(--text-muted)] mt-2 mb-10">
+                {subtitle}
+              </p>
+            )}
           </div>
         )}
 
@@ -53,6 +27,5 @@ function SectionWrapper({
     </section>
   );
 }
-
 
 export default SectionWrapper;

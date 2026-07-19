@@ -44,20 +44,27 @@ function BookCard({ book }) {
   // ✅ Handler dùng Redux dispatch
   function handleAddToCart() {
     dispatch(addToCart(book));
-    toast.success(`Đã thêm "${book.title}" vào giỏ hàng!`);
+    toast.success(`Đã thêm "${book.title}" vào giỏ hàng!`, {
+      icon: '🛍️',
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
   }
 
   return (
-    <Card className="h-100 shadow-sm border-0 overflow-hidden transition-transform duration-200 hover:-translate-y-1">
-
-      <div className="relative">
-        <Link to={`/books/${book.id}`} className="text-decoration-none">
+    <Card className="h-100 shadow-sm border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group bg-white dark:bg-slate-800">
+      <div className="relative overflow-hidden bg-slate-50 dark:bg-slate-900/50">
+        <Link to={`/books/${book.id}`} className="text-decoration-none block">
           <Card.Img
             variant="top"
             src={book.cover}
             alt={book.title}
+            className="transition-transform duration-500 group-hover:scale-110"
             style={{
-              height: "260px",
+              height: "280px",
               objectFit: "cover",
               opacity: outOfStock ? 0.5 : 1,
             }}
@@ -68,7 +75,7 @@ function BookCard({ book }) {
         {discount > 0 && (
           <Badge
             bg="danger"
-            className="absolute top-2 left-2"
+            className="absolute top-3 left-3 px-2 py-1 shadow-sm font-semibold tracking-wide"
           >
             -{discount}%
           </Badge>
@@ -78,7 +85,7 @@ function BookCard({ book }) {
         {outOfStock && (
           <Badge
             bg="secondary"
-            className="absolute top-2 right-2"
+            className="absolute top-3 right-3 px-2 py-1 shadow-sm"
           >
             Hết hàng
           </Badge>
@@ -87,44 +94,46 @@ function BookCard({ book }) {
         {/* ❤️ Wishlist — Tailwind */}
         <button
           onClick={toggleWishlist}
-          className="absolute bottom-2 right-2 bg-white/90 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center text-lg shadow-md transition-all duration-200 border-none cursor-pointer"
+          className={`absolute bottom-3 right-3 rounded-full w-10 h-10 flex items-center justify-center text-lg shadow-md transition-all duration-300 border-none cursor-pointer transform hover:scale-110 active:scale-90 ${
+            isFavorite ? "bg-red-50 text-red-500" : "bg-white/90 text-gray-500 hover:text-red-500 dark:bg-slate-800/90 dark:text-gray-400 dark:hover:text-red-400"
+          }`}
         >
           {isFavorite ? "❤️" : "🤍"}
         </button>
       </div>
 
-      <Card.Body className="flex flex-col">
-        <Card.Title>
+      <Card.Body className="flex flex-col p-4">
+        <Card.Title className="mb-2">
           <Link
             to={`/books/${book.id}`}
-            className="text-decoration-none text-dark hover:text-blue-600 transition-colors"
+            className="text-decoration-none text-slate-800 dark:text-slate-100 font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-2 leading-snug"
           >
             {book.title}
           </Link>
         </Card.Title>
 
-        <Card.Text className="text-muted mb-1">
+        <Card.Text className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-medium">
           {book.author}
         </Card.Text>
 
         {book.rating && (
-          <Card.Text className="text-warning mb-2">
-            ⭐ {book.rating}
+          <Card.Text className="text-amber-500 mb-3 text-sm flex items-center gap-1 font-medium">
+            <span>⭐ {book.rating}</span>
             {book.reviewCount && (
-              <span className="text-secondary">
-                {" "}({book.reviewCount})
+              <span className="text-slate-400 dark:text-slate-500 ml-1">
+                ({book.reviewCount} đánh giá)
               </span>
             )}
           </Card.Text>
         )}
 
-        <div className="mb-3">
-          <span className="font-bold text-blue-600 text-xl">
+        <div className="mb-4 mt-auto">
+          <span className="font-extrabold text-blue-600 dark:text-blue-400 text-xl">
             {formatPrice(book.price)}
           </span>
 
           {book.originalPrice > book.price && (
-            <span className="line-through text-gray-400 ml-2 text-sm">
+            <span className="line-through text-slate-400 dark:text-slate-500 ml-2 text-sm font-medium">
               {formatPrice(book.originalPrice)}
             </span>
           )}
@@ -132,15 +141,24 @@ function BookCard({ book }) {
 
         {/* ✅ Nút thêm giỏ — Tailwind + Redux dispatch */}
         <button
-          className={`mt-auto py-2.5 px-4 rounded-lg font-semibold text-white border-none cursor-pointer transition-all duration-200 ${
+          className={`w-full py-2.5 px-4 rounded-xl font-bold border-none cursor-pointer transition-all duration-300 flex items-center justify-center gap-2 ${
             outOfStock
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+              ? "bg-slate-200 text-slate-400 dark:bg-slate-700 dark:text-slate-500 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 active:scale-95 group-hover:bg-blue-700"
           }`}
           disabled={outOfStock}
           onClick={handleAddToCart}
         >
-          {outOfStock ? "🚫 Hết hàng" : "🛒 Thêm vào giỏ"}
+          {outOfStock ? (
+            <>🚫 Hết hàng</>
+          ) : (
+            <>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              Thêm vào giỏ
+            </>
+          )}
         </button>
       </Card.Body>
     </Card>

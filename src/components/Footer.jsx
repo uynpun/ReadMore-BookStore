@@ -1,80 +1,8 @@
-// Footer.jsx - Tuần 2: Functional Component với inline CSS
-// Người làm: A (Trưởng nhóm)
+// Footer.jsx - Giao diện nâng cấp Tailwind CSS v4
+// Đã loại bỏ inline CSS để code gọn gàng, dễ bảo trì và responsive tốt hơn
 
 function Footer() {
   const currentYear = new Date().getFullYear();
-
-  const styles = {
-    footer: {
-      backgroundColor: '#1a1a2e',
-      color: '#adb5bd',
-      padding: '40px 24px 20px',
-      marginTop: 'auto',
-    },
-    container: {
-      maxWidth: '1100px',
-      margin: '0 auto',
-    },
-    grid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '32px',
-      marginBottom: '32px',
-    },
-    brandCol: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '12px',
-    },
-    brandLogo: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      fontSize: '18px',
-      fontWeight: '700',
-      color: '#ffffff',
-    },
-    brandDesc: {
-      fontSize: '14px',
-      lineHeight: '1.6',
-      color: '#adb5bd',
-    },
-    colTitle: {
-      color: '#ffffff',
-      fontWeight: '600',
-      fontSize: '15px',
-      marginBottom: '12px',
-      display: 'block',
-    },
-    linkList: {
-      listStyle: 'none',
-      padding: 0,
-      margin: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '8px',
-    },
-    link: {
-      color: '#adb5bd',
-      textDecoration: 'none',
-      fontSize: '14px',
-    },
-    divider: {
-      borderColor: '#2e2e4e',
-      margin: '0 0 16px',
-    },
-    bottom: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      fontSize: '13px',
-      flexWrap: 'wrap',
-      gap: '8px',
-    },
-    copyright: {
-      color: '#6c757d',
-    },
-  };
 
   const QUICK_LINKS = [
     { label: 'Về chúng tôi', href: '#' },
@@ -91,28 +19,28 @@ function Footer() {
   ];
 
   return (
-    <footer style={styles.footer}>
-      <div style={styles.container}>
-        <div style={styles.grid}>
+    <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 mt-auto border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Cột 1: Brand */}
-          <div style={styles.brandCol}>
-            <div style={styles.brandLogo}>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2 font-[Outfit] text-2xl font-bold text-white">
               <span>📚</span>
-              <span>ReadMore Bookstore</span>
+              <span>ReadMore</span>
             </div>
-            <p style={styles.brandDesc}>
+            <p className="text-sm leading-relaxed text-slate-400">
               Điểm đến của những cuốn sách hay, những tác giả tài năng
-              và cộng đồng yêu đọc sách.
+              và cộng đồng yêu đọc sách. Chúng tôi mang tri thức đến mọi nhà.
             </p>
           </div>
 
           {/* Cột 2: Quick Links */}
           <div>
-            <span style={styles.colTitle}>Liên kết nhanh</span>
-            <ul style={styles.linkList}>
+            <h3 className="text-white font-semibold mb-6 uppercase text-sm tracking-wider">Liên kết nhanh</h3>
+            <ul className="flex flex-col gap-3">
               {QUICK_LINKS.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} style={styles.link}>
+                  <a href={link.href} className="text-sm text-slate-400 hover:text-blue-400 hover:pl-2 transition-all duration-300">
                     {link.label}
                   </a>
                 </li>
@@ -122,11 +50,11 @@ function Footer() {
 
           {/* Cột 3: Categories */}
           <div>
-            <span style={styles.colTitle}>Danh mục</span>
-            <ul style={styles.linkList}>
+            <h3 className="text-white font-semibold mb-6 uppercase text-sm tracking-wider">Danh mục</h3>
+            <ul className="flex flex-col gap-3">
               {CATEGORIES.map((cat) => (
                 <li key={cat.label}>
-                  <a href={cat.href} style={styles.link}>
+                  <a href={cat.href} className="text-sm text-slate-400 hover:text-blue-400 hover:pl-2 transition-all duration-300">
                     {cat.label}
                   </a>
                 </li>
@@ -136,53 +64,38 @@ function Footer() {
 
           {/* Cột 4: Newsletter */}
           <div>
-            <span style={styles.colTitle}>Nhận tin mới</span>
-            <p style={{ ...styles.brandDesc, marginBottom: '12px' }}>
+            <h3 className="text-white font-semibold mb-6 uppercase text-sm tracking-wider">Nhận tin mới</h3>
+            <p className="text-sm text-slate-400 mb-4">
               Nhận thông báo sách mới và ưu đãi độc quyền.
             </p>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <form className="flex flex-col sm:flex-row gap-2" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
                 placeholder="Email của bạn"
-                style={{
-                  flex: 1,
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid #2e2e4e',
-                  background: '#2e2e4e',
-                  color: '#fff',
-                  fontSize: '14px',
-                  outline: 'none',
-                }}
+                className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                required
               />
               <button
-                style={{
-                  padding: '8px 14px',
-                  background: '#0d6efd',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                }}
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg px-6 py-2.5 text-sm transition-colors duration-200 flex-shrink-0"
               >
                 Đăng ký
               </button>
-            </div>
+            </form>
           </div>
         </div>
 
-        <hr style={styles.divider} />
+        <div className="h-px w-full bg-slate-800 mb-8"></div>
 
         {/* Bottom bar */}
-        <div style={styles.bottom}>
-          <span style={styles.copyright}>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+          <span>
             © {currentYear} ReadMore Bookstore. All rights reserved.
           </span>
-          <span style={styles.copyright}>
-            Privacy Policy · Terms of Service
-          </span>
+          <div className="flex gap-4">
+            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          </div>
         </div>
       </div>
     </footer>

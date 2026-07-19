@@ -24,7 +24,6 @@ function HomePage({
       <SectionWrapper
         title="Tìm kiếm"
         subtitle="Tìm cuốn sách bạn yêu thích"
-        backgroundColor="#ffffff"
       >
         <SearchBar onSearch={onSearch} />
       </SectionWrapper>
@@ -32,7 +31,6 @@ function HomePage({
       <SectionWrapper
         title="Danh mục sách"
         subtitle="Khám phá các thể loại sách nổi bật"
-        backgroundColor="#ffffff"
       >
         <CategoryList
           categories={categories}
@@ -44,7 +42,7 @@ function HomePage({
       <SectionWrapper
         title="Sách nổi bật"
         subtitle="Những cuốn sách được yêu thích"
-        backgroundColor="#f8f9fa"
+        className="bg-black/5 dark:bg-white/5"
       >
         <BookGrid
           books={filteredBooks}
